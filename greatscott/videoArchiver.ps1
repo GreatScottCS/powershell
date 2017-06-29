@@ -28,8 +28,9 @@ Get-ChildItem $sourcefileDir -Filter "*.mp4" |
   Foreach {
      $outfile = "$($downsampleDir)\$($_.BaseName)-converted.mp4"
      $inFile = $_.FullName
-     $cmd = "`"$($handbrake)`" -i `"$($inFile)`" -o `"$($outfile)`"  --preset `"Normal`""
-     $cmd
-     Invoke-Expression $cmd
-     #    Move-Item $_.FullName $archivalDir
+     $moveDest = "$($archivalDir)\$($_.BaseName).mp4"
+    # "`"$($handbrake)`" -i `"$($inFile)`" -o `"$($outfile)`"  --preset `"Normal`""
+    # $params = " -i `"$($inFile)`" -o `"$($outfile)`"  --preset `"Normal`""
+     & $handbrake -i $inFile -o $outfile --preset "Normal"
+     Move-Item $inFile $moveDest
   }
