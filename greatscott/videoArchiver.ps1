@@ -20,8 +20,15 @@ Get-ChildItem $sourcefileDir -Recurse -Filter "*.mp4" |
   
   $destParent = $sourceParent.replace($sourceFileDir, $downsampleDir)
   $archiveParent = $sourceParent.replace($sourceFileDir, $archivalDirParent)
-
-  & $handbrake -i "$sourceParent\$filename" -o "$destParent\$filename" --preset "Normal"
-  Move-Item "$sourceParent\$filename" "$archiveParent\$filename"
+  "Converting $sourceParent\$filename, saving it at $destParent\$filename"
+  & $handbrake -i "$sourceParent\$filename" -o "$destParent\$filename" --preset "Normal" 2> $null  > $null
+  if ($LastExitCode -eq 0 ) {
+    "Moving $sourceParent\$filename, to $archiveParent\$filename"
+    Move-Item "$sourceParent\$filename" "$archiveParent\$filename"
+   }
+   else {
+      $LastExitCode
+      "An error seems to have occured, original file $sourceParent\$filename was not moved"
+      }
 
   }
